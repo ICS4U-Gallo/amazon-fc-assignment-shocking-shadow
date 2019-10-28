@@ -1,0 +1,12 @@
+Input:
+  - Shipment order form
+  - Shipment class (basically the order containing items or item)
+
+Item class:
+  - Item with it's attributes
+  - Has attribute of what category item should be in
+
+-> Organize items and orders by category into some kind of inventory
+-> Gets order and puts items into Bin class
+-> Gets a specific worker (worker class) to move Bin with ordered items into final stage for shipment
+-> Ouptut items and info on UI etc...
