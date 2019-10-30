@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple
+from typing import List
 
 
 class Item:
@@ -38,13 +38,6 @@ class Item:
                                                                            self.category, self.destination)
 
 
-class Bin(list):
-
-    def __init__(self, items: List):
-        super().__init__()
-        self.extend(items)
-
-
 class Shelf(dict):
 
     def __init__(self, categories: List):
@@ -71,3 +64,44 @@ class Shelf(dict):
 
     def retrieve(self, **kwargs):
         return self[kwargs['category']][kwargs['index']]
+
+
+class Bin:
+    def __init__(self, direction: str, number: int):
+        self.direction = direction
+        self.number = number
+        self.contents = []
+
+    def __str__(self):
+        if self.direction == "in":
+            return f"Bin number {self.number} is bringing items to shelving area."
+        elif self.direction == "out":
+            return f"Bin number {self.number} is bringing items to scanning area."
+
+    def send_bin(self):
+        pass
+
+    def item_count(self):
+        if len(self.contents) > 2:
+            return f"There are {len(self.contents)} items in the bin."
+        elif len(self.contents) == 1:
+            return f"There is {len(self.contents)} item in the bin."
+        else:
+            return f"There are {len(self.contents)} items in the bin."
+
+    def add(self, item: Item):
+        self.contents.append(item)
+
+    def remove(self, item: Item):
+        self.contents.remove(item)
+
+    def find_item(self, code: int):
+        if code in self.contents:
+            phrase = f"item is in the Bin."
+        else:
+            phrase = f"item not in Bin."
+        return phrase
+
+    def get_item(self, code):
+        if code in self.contents:
+            return code
