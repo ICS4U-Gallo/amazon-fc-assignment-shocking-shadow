@@ -74,6 +74,8 @@ def test_shelf_init():
     instance = shp.Shelf(categories=['clothes', 'electronics', 'gloves'])
     assert instance == {'clothes': {}, 'electronics': {}, 'gloves': {}}
 
+    shp.Item.all_codes = []
+
 
 def test_insert():
     instance = shp.Shelf(categories=['clothes'])
@@ -86,6 +88,8 @@ def test_insert():
     instance.insert(item)
     assert instance == {'electronics': {}, 'clothes': {3: item}}
 
+    shp.Item.all_codes = []
+
 
 def test_force_insert():
     instance = shp.Shelf(categories=['random'])
@@ -94,6 +98,8 @@ def test_force_insert():
     instance.force_insert(category='random', item=item)
 
     assert instance == {'random': {item.code: item}}
+
+    shp.Item.all_codes = []
 
 
 def test_remove():
@@ -118,6 +124,8 @@ def test_remove():
     instance.remove(category=None, code=item.code)
     assert instance == {None: {}}
 
+    shp.Item.all_codes = []
+
 
 def test_retrieve():
     instance = shp.Shelf(categories=['random'])
@@ -131,3 +139,44 @@ def test_retrieve():
     instance.insert(item)
 
     assert instance.retrieve(category=item.category, code=item.code) == item
+
+    shp.Item.all_codes = []
+
+
+# Test Bin Class
+
+def test_send_bin():
+    shipment = shp.Bin('in', contents=[shp.Item()], destination='Toronto', number=87)
+    truck = shp.Truck(destination='Toronto')
+
+    shipment.send_bin(truck)
+    assert truck.contents[0] == shipment
+
+    shipment = shp.Bin('in', contents=[shp.Item(code=14)], destination='random', number=87)
+    truck = shp.Truck(destination='random')
+
+    shipment.send_bin(truck)
+    assert truck.contents[0] == shipment
+
+    shipment = shp.Bin('in', contents=[shp.Item(code=1331)], destination='random', number=87)
+    truck = shp.Truck(destination='Toronto')
+
+    try:
+        shipment.send_bin(truck)
+        assert False
+    except shp.ShipmentError:
+        assert True
+
+    shp.Item.all_codes = []
+
+
+def test_item_count():
+    shipment = shp.Bin('in', contents=[shp.Item(code=1331),
+                                       shp.Item(code=12345),
+                                       shp.Item(code=678)],
+                       destination='random',
+                       number=8)
+    assert shipment.item_count() == 3
+
+    shipment = shp.Bin('out', contents=[shp.Item()], destination='someplace', number=8)
+    assert shipment.item_count() == 1
