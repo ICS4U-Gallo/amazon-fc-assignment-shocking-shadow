@@ -239,3 +239,81 @@ def test_get_item():
     assert shipment.get_item(780) == -1
 
     shp.Item.all_codes = []
+
+
+# Test Truck Class
+
+def test_is_delivered():
+    item = shp.Item(code=43654)
+    shipment = shp.Bin('in', contents=[item],
+                       destination='Toronto',
+                       number=8)
+
+    truck = shp.Truck(destination='Toronto')
+    truck.contents = [shipment]
+
+    truck.deliver()
+
+    assert truck.contents == []
+    assert truck.is_delivered() is True
+
+    item, item2 = shp.Item(code=45), shp.Item(code=90)
+    shipment = shp.Bin('in', contents=[item, item2],
+                       destination='Toronto',
+                       number=8)
+
+    truck = shp.Truck(destination='Toronto')
+    truck.contents = [shipment]
+
+    truck.deliver()
+
+    assert truck.contents == []
+    assert truck.is_delivered() is True
+
+    shp.Item.all_codes = []
+
+
+def test_deliver():
+    item = shp.Item(code=43654)
+    shipment = shp.Bin('in', contents=[item],
+                       destination='Toronto',
+                       number=8)
+
+    truck = shp.Truck(destination='Toronto')
+    truck.contents = [shipment]
+
+    truck.deliver()
+    assert truck.contents == []
+
+    item, item2 = shp.Item(code=45), shp.Item(code=90)
+    shipment = shp.Bin('in', contents=[item, item2],
+                       destination='Toronto',
+                       number=8)
+
+    truck = shp.Truck(destination='Toronto')
+    truck.contents = [shipment]
+
+    truck.deliver()
+    assert truck.contents == []
+
+    shp.Item.all_codes = []
+
+
+def test_load_bin():
+    item, item2 = shp.Item(code=45), shp.Item(code=90)
+    shipment = shp.Bin('in', contents=[item, item2],
+                       destination='Toronto',
+                       number=8)
+
+    truck = shp.Truck(destination='Toronto')
+    truck.load_bin(shipment)
+    assert truck.contents == [shipment]
+
+    item = shp.Item()
+    shipment = shp.Bin('in', contents=[item], destination='Calgary', number=8)
+
+    try:
+        truck.load_bin(shipment)
+        assert False
+    except shp.ShipmentError:
+        assert True
