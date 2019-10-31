@@ -7,9 +7,20 @@ class ShipmentError(UserWarning):
 
 class Item:
 
+    all_codes = []
+
     def __init__(self, name=None, code=None, category=None, destination=None):
         self.name = name
-        self.code = code
+
+        if code is not None:
+            if code not in Item.all_codes:
+                self.code = code
+                Item.all_codes.append(self.code)
+            else:
+                raise ShipmentError('Codes can not be shared between multiple items')
+        else:
+            self.code = code
+
         self.category = category
         self.destination = destination
 
@@ -23,7 +34,11 @@ class Item:
         if not isinstance(code, int):
             raise TypeError('code must be int')
         else:
-            self.code = code
+            if code not in Item.all_codes:
+                self.code = code
+                Item.all_codes.append(self.code)
+            else:
+                raise ShipmentError('Codes can not be shared between multiple items')
 
     def set_category(self, category: str):
         if not isinstance(category, str):
@@ -56,18 +71,18 @@ class Shelf(dict):
 
     def insert(self, item: Item):
         try:
-            self[item.category].append(item)
+            self[item.category].update({item.code: item})
         except KeyError:
-            self.update({item.category: [item]})
+            self.update({item.category: {item.code: item}})
 
     def force_insert(self, **kwargs):
-        self[kwargs['category']].update({kwargs['index']: kwargs['item']})
+        self[kwargs['category']].update({kwargs['item'].code: kwargs['item']})
 
     def remove(self, **kwargs):
-        self[kwargs['category']].pop(kwargs['index'])
+        self[kwargs['category']].pop(kwargs['code'])
 
-    def retrieve(self, **kwargs):
-        return self[kwargs['category']][kwargs['index']]
+    def retrieve(self, **kwargs) -> Item:
+        return self[kwargs['category']][kwargs['code']]
 
 
 class Bin:
