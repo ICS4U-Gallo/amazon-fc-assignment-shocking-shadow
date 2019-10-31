@@ -1,6 +1,10 @@
 from typing import List
 
 
+class ShipmentError(UserWarning):
+    pass
+
+
 class Item:
 
     def __init__(self, name=None, code=None, category=None, destination=None):
@@ -67,10 +71,11 @@ class Shelf(dict):
 
 
 class Bin:
-    def __init__(self, direction: str, number: int):
+    def __init__(self, direction: str, number: int, destination: str, contents: List):
         self.direction = direction
         self.number = number
-        self.contents = []
+        self.destination = destination
+        self.contents = contents
 
     def __str__(self):
         if self.direction == "in":
@@ -78,10 +83,13 @@ class Bin:
         elif self.direction == "out":
             return f"Bin number {self.number} is bringing items to scanning area."
 
-    def send_bin(self):
-        pass
+    def send_bin(self, truck: "Truck"):
+        truck.load_bin(self)
 
-    def item_count(self):
+    def item_count(self) -> int:
+        return len(self.contents)
+
+    def print_item_count(self) -> str:
         if len(self.contents) > 2:
             return f"There are {len(self.contents)} items in the bin."
         elif len(self.contents) == 1:
@@ -95,13 +103,60 @@ class Bin:
     def remove(self, item: Item):
         self.contents.remove(item)
 
-    def find_item(self, code: int):
-        if code in self.contents:
-            phrase = f"item is in the Bin."
-        else:
-            phrase = f"item not in Bin."
-        return phrase
+    def if_item(self, code: int) -> bool:
+        for item in self.contents:
+            if code == item.code:
+                return True
+            else:
+                return False
+
+    def print_if_item(self, code: int) -> str:
+        for item in self.contents:
+            if code == item.code:
+                return "item is in the bin"
+            else:
+                return "item is not in the bin"
 
     def get_item(self, code):
-        if code in self.contents:
-            return code
+        for item in self.contents:
+            if code == item.code:
+                return item
+            else:
+                return -1
+
+
+class Truck:
+
+    def __init__(self, destination: str, contents=None):
+        self.contents = []
+        self.destination = destination
+
+        if contents is None:
+            self.contents = []
+        else:
+            for element in contents:
+                if not isinstance(element, Bin):
+                    raise TypeError('List must contain only Bins')
+                else:
+                    self.contents.append(element) if element.destination == self.destination else None
+
+        self.delivery_status = False
+
+    def is_delivered(self) -> bool:
+        return self.delivery_status
+
+    def deliver(self) -> List[Bin]:
+        self.delivery_status = True
+        shipment = self.contents
+
+        self.contents = []
+        return shipment
+
+    def load_bin(self, shipment_bin: Bin):
+        if shipment_bin.destination != self.destination:
+            raise ShipmentError('Bin and Truck destination mismatch')
+        else:
+            self.contents.append(shipment_bin)
+
+    def __str__(self) -> str:
+        return 'Contents: {}, Destination: {}'.format(self.contents, self.destination)
