@@ -102,7 +102,7 @@ def test_force_insert():
     shp.Item.all_codes = []
 
 
-def test_remove():
+def test_shelf_remove():
     instance = shp.Shelf(categories=['random'])
     item = shp.Item(name='something', code=12, category='entities')
     instance.insert(item)
@@ -180,3 +180,62 @@ def test_item_count():
 
     shipment = shp.Bin('out', contents=[shp.Item()], destination='someplace', number=8)
     assert shipment.item_count() == 1
+
+    shp.Item.all_codes = []
+
+
+def test_add():
+    shipment = shp.Bin('out', contents=[], destination='someplace', number=8)
+    item = shp.Item()
+
+    shipment.add(item)
+    assert shipment.contents == [item]
+
+    shipment = shp.Bin('in', contents=[shp.Item(code=1331),
+                                       shp.Item(code=12345),
+                                       shp.Item(code=678)],
+                       destination='random',
+                       number=8)
+
+    item = shp.Item(code=43654)
+
+    shipment.add(item)
+    assert shipment.contents[-1] == item
+
+    shp.Item.all_codes = []
+
+
+def test_bin_remove():
+    item = shp.Item(code=43654)
+    shipment = shp.Bin('in', contents=[item],
+                       destination='random',
+                       number=8)
+    shipment.remove(item)
+    assert shipment.contents == []
+
+    item1, item2, item3 = shp.Item(code=57), shp.Item(code=900), shp.Item(code=84)
+    shipment = shp.Bin('in', contents=[item1, item2, item3],
+                       destination='random',
+                       number=8)
+    shipment.remove(item2)
+    assert shipment.contents == [item1, item3]
+
+    shp.Item.all_codes = []
+
+
+def test_get_item():
+    item = shp.Item(code=43654)
+    shipment = shp.Bin('in', contents=[item],
+                       destination='random',
+                       number=8)
+    assert shipment.get_item(item.code) == item
+
+    item1, item2, item3 = shp.Item(code=57), shp.Item(code=89), shp.Item(code=84)
+    shipment = shp.Bin('in', contents=[item1, item2, item3],
+                       destination='random',
+                       number=8)
+
+    assert shipment.get_item(57) == item1
+    assert shipment.get_item(780) == -1
+
+    shp.Item.all_codes = []
