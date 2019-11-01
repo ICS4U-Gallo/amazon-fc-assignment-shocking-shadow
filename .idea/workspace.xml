@@ -17,20 +17,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="framework.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="framework.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shipment_program/framework.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-305">
-              <caret line="136" selection-start-line="136" selection-end-line="136" />
+            <state relative-caret-position="310">
+              <caret line="177" selection-start-line="177" selection-end-line="177" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_framework.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_framework.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shipment_program/test_framework.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="310">
-              <caret line="241" selection-start-line="241" selection-end-line="241" />
+              <caret line="319" selection-start-line="319" selection-end-line="319" />
             </state>
           </provider>
         </entry>
@@ -68,8 +68,8 @@
         <option value="$PROJECT_DIR$/shipment-program/framework.py" />
         <option value="$PROJECT_DIR$/shipment-program/__init__.py" />
         <option value="$PROJECT_DIR$/shipment_program/__init__.py" />
-        <option value="$PROJECT_DIR$/shipment_program/framework.py" />
         <option value="$PROJECT_DIR$/shipment_program/test_framework.py" />
+        <option value="$PROJECT_DIR$/shipment_program/framework.py" />
       </list>
     </option>
   </component>
@@ -242,6 +242,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="23" y="23" width="1225" height="763" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
@@ -308,17 +309,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shipment_program/framework.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-305">
-          <caret line="136" selection-start-line="136" selection-end-line="136" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shipment_program/test_framework.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="310">
-          <caret line="241" selection-start-line="241" selection-end-line="241" />
+          <caret line="319" selection-start-line="319" selection-end-line="319" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shipment_program/framework.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="177" selection-start-line="177" selection-end-line="177" />
         </state>
       </provider>
     </entry>

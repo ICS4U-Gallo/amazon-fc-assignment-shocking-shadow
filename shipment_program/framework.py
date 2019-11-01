@@ -6,7 +6,6 @@ class ShipmentError(UserWarning):
 
 
 class Item:
-
     all_codes = []
 
     def __init__(self, name=None, code=None, category=None, destination=None):
@@ -86,11 +85,12 @@ class Shelf(dict):
 
 
 class Bin:
-    def __init__(self, direction: str, number: int, destination: str, contents: List):
+    def __init__(self, direction: str, number: int, destination: str, contents: List, maximum_occupants: int):
         self.direction = direction
         self.number = number
         self.destination = destination
         self.contents = contents
+        self.maximum_occupants = maximum_occupants
 
     def __str__(self):
         if self.direction == "in":
@@ -113,9 +113,14 @@ class Bin:
             return f"There are {len(self.contents)} items in the bin."
 
     def add(self, item: Item):
-        self.contents.append(item)
+        if len(self.contents) >= self.maximum_occupants:
+            raise ValueError("Bin is at max capacity")
+        else:
+            self.contents.append(item)
 
     def remove(self, item: Item):
+        if len(self.contents) == 0:
+            raise LookupError("Cannot remove from an empty bin")
         self.contents.remove(item)
 
     def if_item(self, code: int) -> bool:
